@@ -3,67 +3,34 @@
 namespace common\models;
 
 use Yii;
-use common\models\Stafftbl;
 
-/**
- * This is the model class for table "stafftbl".
- *
- * @property integer $id
- * @property integer $position
- * @property string $mobile
- * @property string $QQ
- * @property string $email
- * @property string $emergency_contact_no
- * @property string $emergency_contact
- * @property string $id_no
- * @property string $addr
- * @property string $login_pwd
- * @property integer $gmt_create
- * @property integer $gmt_modified
- * @property integer $is_del
- * @property string $bank
- * @property string $acct_id
- * @property string $hiredate
- * @property string $expiration
- * @property string $medical_examination
- * @property string $other
- * @property string $photo
- * @property string $pic_path
- * @property string $name
- * @property integer $department
- * @property string $education
- * @property string $native_place
- * @property integer $state
- * @property integer $examination
- */
 class Stafftbl extends \yii\db\ActiveRecord {
 
-    /**
-     * @inheritdoc
-     */
+    public $rememberMe = true;
+    public $repwd;
+
     public static function tableName() {
         return 'stafftbl';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules() {
         return [
-            [['position', 'mobile', 'QQ', 'email', 'emergency_contact_no', 'emergency_contact', 'id_no', 'addr', 'login_pwd', 'bank', 'acct_id', 'hiredate', 'expiration', 'name', 'education', 'native_place'], 'required'],
-            [['position', 'gmt_create', 'gmt_modified', 'is_del', 'department', 'state', 'examination'], 'integer'],
-            [['hiredate', 'expiration'], 'safe'],
-            [['mobile', 'emergency_contact_no'], 'string', 'max' => 11],
-            [['QQ', 'emergency_contact', 'login_pwd'], 'string', 'max' => 32],
-            [['email', 'addr', 'bank', 'medical_examination', 'other', 'photo', 'pic_path', 'native_place'], 'string', 'max' => 128],
-            [['id_no', 'acct_id'], 'string', 'max' => 18],
-            [['name', 'education'], 'string', 'max' => 30],
+            ['mobile', 'required', 'message' => '手机号不能为空',
+                'on' => ['login', 'seekpwd', 'changepwd', 'create']],
+            ['mobile', 'unique', 'message' => '手机号已存在', 'on' => 'create'],
+            ['login_pwd', 'required', 'message' => '管理员密码不能为空', 'on' => ['login', 'changepwd', 'login_pwd', 'create', 'changeemail']],
+            ['rememberMe', 'boolean', 'on' => 'login'],
+            ['login_pwd', 'validatePwd', 'on' => ['login', 'changeemail']],
+            ['email', 'required', 'message' => '邮箱不能为空', 'on' => ['seekpwd', 'create', 'changeemail']],
+            ['email', 'email', 'message' => '邮箱格式不正确', 'on' => ['seekpwd', 'create', 'changeemail']],
+            ['email', 'unique', 'message' => '邮箱已存在', 'on' => ['create', 'changeemail']],
+            ['email', 'validateEmail', 'on' => 'seekpwd'],
+            //声明repwd的验证方法：和login_pwd对比
+            ['repwd', 'required', 'message' => '新密码不能为空', 'on' => ['changepwd', 'create']],
+            ['repwd', 'compare', 'compareAttribute' => 'login_pwd', 'message' => '两次密码输入不一致', 'on' => ['changepwd', 'create']],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels() {
         return [
             'id' => 'ID',
@@ -91,56 +58,74 @@ class Stafftbl extends \yii\db\ActiveRecord {
             'department' => '部门',
             'education' => '学历',
             'native_place' => '籍贯',
-            'state' => '状态',
-            'examination' => '审核',
+            'state' => '在职状态',
+            'audit' => '审核状态',
+            'repwd'=>'确认密码'
         ];
     }
 
-//各种表之间的关联
-    public function getExaminationtypetbl() {
-        return $this->hasOne(ExaminationTypetbl::className(), ['id' => 'examination']);
-    }
-
-    public function getDepartmenttypetbl() {
-        return $this->hasOne(DepartmentTypetbl::className(), ['id' => 'department']);
-    }
-
-    public function getPositiontypetbl() {
-        return $this->hasOne(PositionTypetbl::className(), ['id' => 'position']);
-    }
-
-    public function getStatetypetbl() {
-        return $this->hasOne(StateTypetbl::className(), ['id' => 'state']);
-    }
-
-    public function getBanktypetbl() {
-        return $this->hasOne(BankTypetbl::className(), ['id' => 'bank']);
-    }
-
-    public function getEducationtypetbl() {
-        return $this->hasOne(EducationTypetbl::className(), ['id' => 'education']);
-    }
-
-//提醒边框
-    public static function getPengdingCommentCount() {
-        return Stafftbl::find()->where(['examination' => 1])->count();
-    }
-
-//自动修改时间
-
-    public function beforeSave($insert) {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->gmt_create = time();
-                $this->gmt_modified = time();
-            } else {
-                $this->gmt_modified = time();
+    public function validatePwd() {
+        if (!$this->hasErrors()) {
+            $data = self::find()->where('mobile= :mobile and login_pwd = :pwd', [
+                        ":mobile" => $this->mobile, ":pwd" => md5($this->login_pwd)
+                    ])->one();
+            if (is_null($data)) {
+                $this->addError("mobile", "手机或者密码错误");
             }
+        }
+    }
 
-            return true;
-        } else {
+    public function validateEmail() {
+        if (!$this->hasErrors()) {
+            $data = self::find()->where('mobile = :mobile and email = :email', [
+                        ":mobile" => $this->mobile, ":email" => $this->email])
+                    ->one();
+            if (is_null($data)) {
+                $this->addError("email", "帐号邮箱不匹配");
+            }
+        }
+    }
+
+    public function login($data) {
+        $this->scenario = "login";
+        if ($this->load($data) && $this->validate()) {
+            $session = Yii::$app->session;
+            $lifetime = $this->rememberMe ? 24 * 3600 : 0;
+            session_set_cookie_params($lifetime);
+            $session['admin'] = ['mobile' => $this->mobile,
+                'isLogin' => 1,];
+            $this->save(['login_time' => time(), 'login_ip' => ip2long(Yii::$app->request->userIP)], 'mobile= :mobile', [':mobile' => $this->mobile]);
+            return (bool) $session['admin']['isLogin'];
+        }
+        return false;
+    }
+
+    //自定义token生成方法
+    public function createToken($mobile, $time) {
+        return md5(md5($mobile) . base64_decode(Yii::$app->request->userIP) . md5($time));
+    }
+
+    public function changePwd($data) {
+        $this->scenario = 'changepwd';
+        if ($this->load($data) && $this->validate()) {
+            return (bool) $this->save(['mobile' => md5($this->mobile)], 'mobile = :mobile', [':mobile' => $this->mobile]);
+        }
+        return false;
+    }
+
+    //添加员工
+    public function create($data) {
+        $this->scenario = 'create';
+        //save 自动判断添加或修改，包含validate方法
+        if ($this->load($data) && $this->validate()) {
+            $this->login_pwd = md5($this->login_pwd);
+            //save（）不需要再做验证，给一个false
+            if ($this->save(false)) {
+                return true;
+            }
             return false;
         }
+        return false;
     }
 
 }

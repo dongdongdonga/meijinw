@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017-03-22 18:30:11
+-- Generation Time: 2017-03-23 23:37:22
 -- 服务器版本： 5.7.17-0ubuntu0.16.04.1
 -- PHP Version: 7.0.15-0ubuntu0.16.04.4
 
@@ -25,11 +25,51 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `adopt_typetbl`
+--
+
+CREATE TABLE `adopt_typetbl` (
+  `id` int(11) NOT NULL,
+  `adopt_type` varchar(32) NOT NULL COMMENT '通过状态'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='通过状态表';
+
+--
+-- 转存表中的数据 `adopt_typetbl`
+--
+
+INSERT INTO `adopt_typetbl` (`id`, `adopt_type`) VALUES
+(1, '未通过'),
+(2, '已通过');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `audit_typetbl`
+--
+
+CREATE TABLE `audit_typetbl` (
+  `id` int(11) NOT NULL,
+  `audit_type` varchar(32) NOT NULL COMMENT '审核状态',
+  `is_del` tinyint(4) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='审核状态表';
+
+--
+-- 转存表中的数据 `audit_typetbl`
+--
+
+INSERT INTO `audit_typetbl` (`id`, `audit_type`, `is_del`) VALUES
+(1, '未审核', 0),
+(2, '已审核', 0),
+(3, '审核未通过', 0);
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `backgroud`
 --
 
-CREATE TABLE IF NOT EXISTS `backgroud` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `backgroud` (
+  `id` int(11) UNSIGNED NOT NULL,
   `background_account` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '后台账号',
   `coal_products` varchar(20) DEFAULT NULL COMMENT '煤炭产品',
   `storage` varchar(20) DEFAULT NULL COMMENT '仓位产品',
@@ -37,9 +77,8 @@ CREATE TABLE IF NOT EXISTS `backgroud` (
   `trader_account` tinyint(4) DEFAULT NULL COMMENT '交易员账号',
   `state` tinyint(4) DEFAULT NULL COMMENT '交易员状态',
   `gmt_create` int(11) DEFAULT NULL COMMENT '创建时间',
-  `gmt_modified` int(11) DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+  `gmt_modified` int(11) DEFAULT NULL COMMENT '修改时间'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `backgroud`
@@ -60,18 +99,39 @@ INSERT INTO `backgroud` (`id`, `background_account`, `coal_products`, `storage`,
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `bank_typetbl`
+--
+
+CREATE TABLE `bank_typetbl` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `bank_type` varchar(30) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `bank_typetbl`
+--
+
+INSERT INTO `bank_typetbl` (`id`, `bank_type`) VALUES
+(1, '工商银行'),
+(2, '中国银行'),
+(3, '农业银行'),
+(4, '建设银行'),
+(5, '交通银行');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `buyer_certificatetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `buyer_certificatetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `buyer_certificatetbl` (
+  `id` int(11) NOT NULL,
   `certificate_path` varchar(32) NOT NULL COMMENT '凭证路径',
   `certificate_name` varchar(32) NOT NULL COMMENT '凭证名称',
   `certificate_type_id` int(11) NOT NULL COMMENT '凭证类型id',
   `gmt_create` int(11) NOT NULL COMMENT '上传时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='凭证表（买家）';
 
 -- --------------------------------------------------------
@@ -80,11 +140,10 @@ CREATE TABLE IF NOT EXISTS `buyer_certificatetbl` (
 -- 表的结构 `certificate_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `certificate_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `certificate_typetbl` (
+  `id` int(11) NOT NULL,
   `certificate_type` varchar(32) NOT NULL COMMENT '凭证类型',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='凭证类型表';
 
 -- --------------------------------------------------------
@@ -93,8 +152,8 @@ CREATE TABLE IF NOT EXISTS `certificate_typetbl` (
 -- 表的结构 `coal_demandtbl`
 --
 
-CREATE TABLE IF NOT EXISTS `coal_demandtbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `coal_demandtbl` (
+  `id` int(11) NOT NULL,
   `coal_type` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '煤种',
   `coal_name` varchar(30) DEFAULT NULL COMMENT '品名',
   `origin` varchar(255) DEFAULT NULL COMMENT '产地',
@@ -122,8 +181,7 @@ CREATE TABLE IF NOT EXISTS `coal_demandtbl` (
   `char_characteristic` varchar(24) DEFAULT NULL COMMENT '焦渣特征',
   `remark` text COMMENT '备注',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '创建时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -132,8 +190,8 @@ CREATE TABLE IF NOT EXISTS `coal_demandtbl` (
 -- 表的结构 `coal_ordertbl`
 --
 
-CREATE TABLE IF NOT EXISTS `coal_ordertbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `coal_ordertbl` (
+  `id` int(11) NOT NULL,
   `penalty` decimal(10,0) NOT NULL COMMENT '违约金',
   `coal_charge` decimal(10,0) NOT NULL COMMENT '买煤费用',
   `truck_charge` decimal(10,0) NOT NULL COMMENT '汽运费用',
@@ -141,8 +199,7 @@ CREATE TABLE IF NOT EXISTS `coal_ordertbl` (
   `deposit` decimal(10,0) NOT NULL COMMENT '担保费用',
   `gmt_create` int(11) NOT NULL COMMENT '创建时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL COMMENT '伪删除',
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL COMMENT '伪删除'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='煤炭交易订单表';
 
 -- --------------------------------------------------------
@@ -151,8 +208,8 @@ CREATE TABLE IF NOT EXISTS `coal_ordertbl` (
 -- 表的结构 `coal_products`
 --
 
-CREATE TABLE IF NOT EXISTS `coal_products` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `coal_products` (
+  `id` int(11) NOT NULL,
   `coal_type` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '煤种',
   `coal_name` varchar(30) DEFAULT NULL COMMENT '品名',
   `origin` varchar(255) DEFAULT NULL COMMENT '产地',
@@ -187,8 +244,7 @@ CREATE TABLE IF NOT EXISTS `coal_products` (
   `dealer_name` varchar(30) DEFAULT NULL COMMENT '交易员',
   `dealer_phone` char(11) DEFAULT NULL COMMENT '交易员电话',
   `settlement_method` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '结算方式',
-  `delivery_place` varchar(255) DEFAULT NULL COMMENT '交货地点',
-  PRIMARY KEY (`id`)
+  `delivery_place` varchar(255) DEFAULT NULL COMMENT '交货地点'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -197,15 +253,14 @@ CREATE TABLE IF NOT EXISTS `coal_products` (
 -- 表的结构 `complainttbl`
 --
 
-CREATE TABLE IF NOT EXISTS `complainttbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `complainttbl` (
+  `id` int(11) NOT NULL,
   `complaint_type_id` int(11) NOT NULL COMMENT '投诉项目id',
   `complaint_title` varchar(64) NOT NULL COMMENT '投诉标题',
   `complaint_content` text NOT NULL COMMENT '投诉内容',
   `gmt_create` int(11) NOT NULL COMMENT '创建时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='投诉表';
 
 -- --------------------------------------------------------
@@ -214,14 +269,13 @@ CREATE TABLE IF NOT EXISTS `complainttbl` (
 -- 表的结构 `complaint_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `complaint_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `complaint_typetbl` (
+  `id` int(11) NOT NULL,
   `staff_complaints` varchar(32) NOT NULL COMMENT '人员投诉',
   `quality_complaint` text NOT NULL COMMENT '煤炭质量投诉',
   `gmt_create` int(11) NOT NULL COMMENT '创建时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='投诉类型表';
 
 -- --------------------------------------------------------
@@ -230,14 +284,13 @@ CREATE TABLE IF NOT EXISTS `complaint_typetbl` (
 -- 表的结构 `co_emptbl`
 --
 
-CREATE TABLE IF NOT EXISTS `co_emptbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `co_emptbl` (
+  `id` int(11) NOT NULL,
   `co_name` varchar(128) DEFAULT NULL COMMENT '公司姓名',
   `staff_name` varchar(30) DEFAULT NULL COMMENT '员工姓名',
   `staff_mobile` char(255) DEFAULT NULL COMMENT '手机号',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '创建时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -246,8 +299,8 @@ CREATE TABLE IF NOT EXISTS `co_emptbl` (
 -- 表的结构 `co_usertbl`
 --
 
-CREATE TABLE IF NOT EXISTS `co_usertbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `co_usertbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `co_name` varchar(128) DEFAULT NULL COMMENT '公司名称',
   `co_type` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '企业类型',
   `co_nature` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '企业性质',
@@ -273,8 +326,7 @@ CREATE TABLE IF NOT EXISTS `co_usertbl` (
   `emp_position` varchar(30) DEFAULT NULL COMMENT '雇员职位',
   `emp_mobile` char(11) DEFAULT NULL COMMENT '雇员手机号',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -283,15 +335,14 @@ CREATE TABLE IF NOT EXISTS `co_usertbl` (
 -- 表的结构 `demandtbl`
 --
 
-CREATE TABLE IF NOT EXISTS `demandtbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `demandtbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `devlivery_place` varchar(255) DEFAULT NULL COMMENT '交货地点',
   `requiement` int(11) UNSIGNED DEFAULT NULL COMMENT '需求量',
   `purchase_indicator` text COMMENT '采购指标',
   `people_need` char(11) DEFAULT NULL COMMENT '需求人',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -300,12 +351,11 @@ CREATE TABLE IF NOT EXISTS `demandtbl` (
 -- 表的结构 `department_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `department_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `department_typetbl` (
+  `id` int(11) NOT NULL,
   `department_type` varchar(32) NOT NULL COMMENT '部门类型',
-  `is_del` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='部门类型表';
+  `is_del` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='部门类型表';
 
 --
 -- 转存表中的数据 `department_typetbl`
@@ -324,9 +374,8 @@ INSERT INTO `department_typetbl` (`id`, `department_type`, `is_del`) VALUES
 -- 表的结构 `deposittbl`
 --
 
-CREATE TABLE IF NOT EXISTS `deposittbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
+CREATE TABLE `deposittbl` (
+  `id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -335,8 +384,8 @@ CREATE TABLE IF NOT EXISTS `deposittbl` (
 -- 表的结构 `deposit_apptbl`
 --
 
-CREATE TABLE IF NOT EXISTS `deposit_apptbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `deposit_apptbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `co_name` varchar(255) DEFAULT NULL COMMENT '公司名称',
   `co_addr` varchar(255) DEFAULT NULL COMMENT '公司地址',
   `business_area` varchar(128) DEFAULT NULL COMMENT '业务区域',
@@ -345,8 +394,7 @@ CREATE TABLE IF NOT EXISTS `deposit_apptbl` (
   `contact_no` char(11) DEFAULT NULL COMMENT '联系电话',
   `examination` tinyint(4) UNSIGNED DEFAULT '0' COMMENT '审核',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -355,14 +403,13 @@ CREATE TABLE IF NOT EXISTS `deposit_apptbl` (
 -- 表的结构 `econtacttbl`
 --
 
-CREATE TABLE IF NOT EXISTS `econtacttbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `econtacttbl` (
+  `id` int(11) NOT NULL,
   `e_contact_charge` decimal(10,0) NOT NULL COMMENT '电子合同签订费用',
   `sign_time` int(11) NOT NULL COMMENT '签约时间',
   `gmt_create` int(11) NOT NULL COMMENT '上传时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='电子合同订单表';
 
 -- --------------------------------------------------------
@@ -371,12 +418,11 @@ CREATE TABLE IF NOT EXISTS `econtacttbl` (
 -- 表的结构 `education_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `education_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `education_typetbl` (
+  `id` int(11) NOT NULL,
   `education_type` varchar(32) NOT NULL COMMENT '学历类型',
-  `is_del` tinyint(3) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='学历类型表';
+  `is_del` tinyint(3) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='学历类型表';
 
 --
 -- 转存表中的数据 `education_typetbl`
@@ -392,33 +438,11 @@ INSERT INTO `education_typetbl` (`id`, `education_type`, `is_del`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `examination_typetbl`
---
-
-CREATE TABLE IF NOT EXISTS `examination_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `examination_type` varchar(32) NOT NULL COMMENT '审核状态',
-  `is_del` tinyint(4) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='审核状态表';
-
---
--- 转存表中的数据 `examination_typetbl`
---
-
-INSERT INTO `examination_typetbl` (`id`, `examination_type`, `is_del`) VALUES
-(1, '未审核', 0),
-(2, '已审核', 0),
-(3, '审核未通过', 0);
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `fast_reward_apptbl`
 --
 
-CREATE TABLE IF NOT EXISTS `fast_reward_apptbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `fast_reward_apptbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `co_name` varchar(128) DEFAULT NULL COMMENT '公司名称',
   `co_addr` varchar(255) DEFAULT NULL COMMENT '公司地址',
   `business_aera` varchar(255) DEFAULT NULL COMMENT '业务区域',
@@ -427,8 +451,7 @@ CREATE TABLE IF NOT EXISTS `fast_reward_apptbl` (
   `contact_no` char(11) DEFAULT NULL COMMENT '联系电话',
   `examination` tinyint(255) UNSIGNED DEFAULT '0' COMMENT '审核',
   `gmt_greate` int(11) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmf_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmf_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -437,8 +460,8 @@ CREATE TABLE IF NOT EXISTS `fast_reward_apptbl` (
 -- 表的结构 `fin_usertbl`
 --
 
-CREATE TABLE IF NOT EXISTS `fin_usertbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `fin_usertbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `pay_pwd` char(32) DEFAULT NULL COMMENT '支付密码',
   `login_pwd` char(32) DEFAULT NULL COMMENT '登陆密码',
   `acct_bal` decimal(10,0) UNSIGNED DEFAULT NULL COMMENT '账户余额',
@@ -447,8 +470,7 @@ CREATE TABLE IF NOT EXISTS `fin_usertbl` (
   `cargo_loanlnfo` varchar(128) DEFAULT NULL COMMENT '货权贷款资料',
   `margin_loanlnfo` varchar(128) DEFAULT NULL COMMENT '保证金贷款资料',
   `gmt_cerate` int(255) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmt_modified` int(10) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(10) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -457,8 +479,8 @@ CREATE TABLE IF NOT EXISTS `fin_usertbl` (
 -- 表的结构 `managertbl`
 --
 
-CREATE TABLE IF NOT EXISTS `managertbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `managertbl` (
+  `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL COMMENT '姓名',
   `department` tinyint(4) NOT NULL COMMENT '部门',
   `position` varchar(32) NOT NULL COMMENT '职位',
@@ -485,17 +507,17 @@ CREATE TABLE IF NOT EXISTS `managertbl` (
   `pic_path` varchar(128) DEFAULT NULL COMMENT '图片存放路径',
   `state` tinyint(4) NOT NULL COMMENT '在职状态',
   `examination` tinyint(4) NOT NULL DEFAULT '1' COMMENT '审核',
-  `is_del` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='主管账户表';
+  `adopt` tinyint(4) NOT NULL COMMENT '通过状态',
+  `is_del` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='主管账户表';
 
 --
 -- 转存表中的数据 `managertbl`
 --
 
-INSERT INTO `managertbl` (`id`, `name`, `department`, `position`, `mobile`, `QQ`, `email`, `emergency_contact_no`, `emergency_contact`, `id_no`, `native_place`, `education`, `addr`, `Ukey_info`, `login_pwd`, `gmt_create`, `gmt_modified`, `bank`, `acct_id`, `hiredate`, `expiration`, `medical_examination`, `other`, `photo`, `pic_path`, `state`, `examination`, `is_del`) VALUES
-(1, '张三11', 1, '2', '15845678901', '7894561', '7894567@qq.com', '13823456789', '王五', '123456789012345678', '广东深圳', 0, '珠海', '123', '12345678978945612312345678998745', 1490075150, 1490163295, '中国建设银行', '123456789123456789', '2017-03-23 15:35:29', '2017-03-31 03:29:44', NULL, '', '', '', 1, 1, 0),
-(2, '李四1', 2, '1', '12345678900', '456789123', '456789123@qq.com', '12345678911', '赵六', '123456789123456789', '上海珠江口', 3, '北京海淀区', '213165465', '12345678978945612369854747478545', NULL, 1490174538, '中国银行', '987654321987654321', '2017-02-23 16:13:07', '2018-04-19 06:20:22', '', '', '', '', 1, 1, 0);
+INSERT INTO `managertbl` (`id`, `name`, `department`, `position`, `mobile`, `QQ`, `email`, `emergency_contact_no`, `emergency_contact`, `id_no`, `native_place`, `education`, `addr`, `Ukey_info`, `login_pwd`, `gmt_create`, `gmt_modified`, `bank`, `acct_id`, `hiredate`, `expiration`, `medical_examination`, `other`, `photo`, `pic_path`, `state`, `examination`, `adopt`, `is_del`) VALUES
+(1, '张三11', 1, '2', '15845678901', '7894561', '7894567@qq.com', '13823456789', '王五', '123456789012345678', '广东深圳', 0, '珠海', '123', '12345678978945612312345678998745', 1490075150, 1490184703, '中国建设银行', '123456789123456789', '2017-03-23 15:35:29', '2017-03-31 03:29:44', NULL, '', '', '', 1, 2, 0, 0),
+(2, '李四1', 3, '1', '12345678900', '456789123', '456789123@qq.com', '12345678911', '赵六', '123456789123456789', '上海珠江口fdsfds', 3, '北京海淀区', '213165465', '12345678978945612369854747478545', NULL, 1490184708, '中国银行', '987654321987654321', '2017-02-23 16:13:07', '2018-04-19 06:20:22', '', '', '', '', 1, 2, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -503,16 +525,15 @@ INSERT INTO `managertbl` (`id`, `name`, `department`, `position`, `mobile`, `QQ`
 -- 表的结构 `newstbl`
 --
 
-CREATE TABLE IF NOT EXISTS `newstbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `newstbl` (
+  `id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL COMMENT '表的标题',
   `content` text NOT NULL COMMENT '内容',
   `examination` tinyint(4) NOT NULL COMMENT '审查',
   `sort` int(11) NOT NULL COMMENT '排序',
   `gmt_create` int(11) NOT NULL COMMENT '上传时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='新闻表';
 
 -- --------------------------------------------------------
@@ -521,14 +542,13 @@ CREATE TABLE IF NOT EXISTS `newstbl` (
 -- 表的结构 `pictbl`
 --
 
-CREATE TABLE IF NOT EXISTS `pictbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `pictbl` (
+  `id` int(11) NOT NULL,
   `pic_path` varchar(32) NOT NULL COMMENT '图片存放位置',
   `pic_name` varchar(32) NOT NULL COMMENT '图片名',
   `gmt_create` int(11) NOT NULL COMMENT '上传时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='图片表';
 
 -- --------------------------------------------------------
@@ -537,8 +557,8 @@ CREATE TABLE IF NOT EXISTS `pictbl` (
 -- 表的结构 `platform_stafftbl`
 --
 
-CREATE TABLE IF NOT EXISTS `platform_stafftbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `platform_stafftbl` (
+  `id` int(11) NOT NULL,
   `position` varchar(32) NOT NULL COMMENT '职位',
   `name` varchar(32) NOT NULL COMMENT '姓名',
   `gentle` tinyint(2) NOT NULL COMMENT '性别',
@@ -556,8 +576,7 @@ CREATE TABLE IF NOT EXISTS `platform_stafftbl` (
   `staff_id` char(11) NOT NULL COMMENT '员工账号',
   `gmt_create` int(11) NOT NULL COMMENT '创建时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='平台员工账户表';
 
 -- --------------------------------------------------------
@@ -566,12 +585,11 @@ CREATE TABLE IF NOT EXISTS `platform_stafftbl` (
 -- 表的结构 `position_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `position_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `position_typetbl` (
+  `id` int(11) NOT NULL,
   `position_type` varchar(32) NOT NULL COMMENT '职位类型',
-  `is_del` tinyint(3) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='职位类型表';
+  `is_del` tinyint(3) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='职位类型表';
 
 --
 -- 转存表中的数据 `position_typetbl`
@@ -590,8 +608,8 @@ INSERT INTO `position_typetbl` (`id`, `position_type`, `is_del`) VALUES
 -- 表的结构 `possesiontbl`
 --
 
-CREATE TABLE IF NOT EXISTS `possesiontbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `possesiontbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `acct_bal` decimal(10,0) UNSIGNED DEFAULT NULL COMMENT '可用金额',
   `acct_amt` decimal(10,0) UNSIGNED DEFAULT NULL COMMENT '总金额',
   `freeze_amt` decimal(10,0) UNSIGNED DEFAULT NULL COMMENT '冻结金额',
@@ -601,8 +619,7 @@ CREATE TABLE IF NOT EXISTS `possesiontbl` (
   `transfer_time` int(11) UNSIGNED DEFAULT NULL COMMENT '转出时间',
   `recieve_time` int(11) UNSIGNED DEFAULT NULL COMMENT '转入时间',
   `gmt_create` int(255) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmt_modified` int(255) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(255) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -611,15 +628,14 @@ CREATE TABLE IF NOT EXISTS `possesiontbl` (
 -- 表的结构 `ppt_imgtbl`
 --
 
-CREATE TABLE IF NOT EXISTS `ppt_imgtbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ppt_imgtbl` (
+  `id` int(11) NOT NULL,
   `ppt_path` varchar(32) NOT NULL COMMENT '图片存放位置',
   `ppt_name` varchar(32) NOT NULL COMMENT '图片名',
   `sort` tinyint(4) NOT NULL COMMENT '排序',
   `gmt_create` int(11) NOT NULL COMMENT '上传时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='首页PPT轮播图';
 
 -- --------------------------------------------------------
@@ -628,12 +644,11 @@ CREATE TABLE IF NOT EXISTS `ppt_imgtbl` (
 -- 表的结构 `product_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `product_typetbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `product_typetbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `product_type` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '商品种类',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '上传时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -642,15 +657,14 @@ CREATE TABLE IF NOT EXISTS `product_typetbl` (
 -- 表的结构 `seller_certificatetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `seller_certificatetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `seller_certificatetbl` (
+  `id` int(11) NOT NULL,
   `certificate_path` varchar(32) NOT NULL COMMENT '凭证路径',
   `certificate_name` varchar(32) NOT NULL COMMENT '凭证名称',
   `certificate_type_id` int(11) NOT NULL COMMENT '凭证类型id',
   `gmt_create` int(11) NOT NULL COMMENT '上传时间',
   `gmt_modified` int(11) NOT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) NOT NULL,
-  PRIMARY KEY (`id`)
+  `is_del` tinyint(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='凭证表(卖家)';
 
 -- --------------------------------------------------------
@@ -659,46 +673,49 @@ CREATE TABLE IF NOT EXISTS `seller_certificatetbl` (
 -- 表的结构 `stafftbl`
 --
 
-CREATE TABLE IF NOT EXISTS `stafftbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `position` tinyint(4) NOT NULL COMMENT '职位',
-  `mobile` char(11) NOT NULL COMMENT '手机号',
-  `QQ` varchar(32) NOT NULL COMMENT 'QQ',
-  `email` varchar(128) NOT NULL COMMENT '邮箱',
-  `emergency_contact_no` char(11) NOT NULL COMMENT '紧急联系人电话',
-  `emergency_contact` varchar(32) NOT NULL COMMENT '紧急联系人',
-  `id_no` char(18) NOT NULL COMMENT '身份证号',
-  `addr` varchar(128) NOT NULL COMMENT '住址',
-  `login_pwd` char(32) NOT NULL COMMENT '员工密码',
+CREATE TABLE `stafftbl` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `position` tinyint(4) DEFAULT NULL COMMENT '职位',
+  `mobile` char(11) NOT NULL DEFAULT '' COMMENT '手机号',
+  `QQ` varchar(32) DEFAULT NULL COMMENT 'QQ',
+  `email` varchar(128) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `emergency_contact_no` char(11) DEFAULT NULL COMMENT '紧急联系人电话',
+  `emergency_contact` varchar(32) DEFAULT NULL COMMENT '紧急联系人',
+  `id_no` char(18) DEFAULT NULL COMMENT '身份证号',
+  `addr` varchar(128) DEFAULT NULL COMMENT '住址',
+  `login_pwd` char(32) NOT NULL DEFAULT '' COMMENT '员工密码',
   `gmt_create` int(11) DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` int(11) DEFAULT NULL COMMENT '修改时间',
-  `is_del` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `bank` tinyint(4) NOT NULL COMMENT '开户行',
-  `acct_id` char(18) NOT NULL COMMENT '员工银行卡',
-  `hiredate` datetime NOT NULL COMMENT '入职时间',
-  `expiration` datetime NOT NULL COMMENT '合约到期',
-  `medical-examination` varchar(128) DEFAULT NULL COMMENT '体检报告',
+  `is_del` tinyint(3) UNSIGNED DEFAULT '0',
+  `bank` tinyint(4) DEFAULT NULL COMMENT '开户行',
+  `acct_id` char(18) DEFAULT NULL COMMENT '员工银行卡',
+  `hiredate` datetime DEFAULT NULL COMMENT '入职时间',
+  `expiration` datetime DEFAULT NULL COMMENT '合约到期',
+  `medical_examination` varchar(128) DEFAULT NULL COMMENT '体检报告',
   `other` varchar(128) DEFAULT NULL COMMENT '其他信息',
   `photo` varchar(128) DEFAULT NULL COMMENT '照片',
   `pic_path` varchar(128) DEFAULT NULL COMMENT '图片存放路径',
-  `name` varchar(30) NOT NULL COMMENT '姓名',
+  `name` varchar(30) DEFAULT NULL COMMENT '姓名',
   `department` tinyint(4) DEFAULT NULL COMMENT '部门',
-  `eduction` varchar(30) NOT NULL COMMENT '学历',
-  `native_place` varchar(128) NOT NULL COMMENT '籍贯',
-  `state` tinyint(4) NOT NULL COMMENT '状态',
-  `examination` tinyint(4) NOT NULL DEFAULT '0' COMMENT '审核',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='平台员工账户表';
+  `education` varchar(30) DEFAULT '1' COMMENT '学历',
+  `native_place` varchar(128) DEFAULT NULL COMMENT '籍贯',
+  `state` tinyint(4) DEFAULT NULL COMMENT '状态',
+  `audit` tinyint(4) DEFAULT '0' COMMENT '审核',
+  `login_time` int(11) DEFAULT NULL,
+  `login_ip` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='平台员工账户表';
 
 --
 -- 转存表中的数据 `stafftbl`
 --
 
-INSERT INTO `stafftbl` (`id`, `position`, `mobile`, `QQ`, `email`, `emergency_contact_no`, `emergency_contact`, `id_no`, `addr`, `login_pwd`, `gmt_create`, `gmt_modified`, `is_del`, `bank`, `acct_id`, `hiredate`, `expiration`, `medical-examination`, `other`, `photo`, `pic_path`, `name`, `department`, `eduction`, `native_place`, `state`, `examination`) VALUES
-(1, 2, '11111111111', '496955775', '123456@qq.com', '11111111111', 'laidasdlka', '111111111111111111', 'asdasdasdasdasd', 'aasasdas', 1124124124, 1490091978, 0, 1, '123123213123123123', '2017-03-22 12:25:54', '2017-03-29 12:25:58', 'asdsad', 'sadsad', 'asdasdas', 'dasdasd', 'sadasd2', 2, '本科', 'hjhhh', 1, 1),
-(2, 3, '11111111111', '121212121212', '465498465498', '65432103216', '阿斯达所多', '123123213213123321', '搭设', 'sasdas', NULL, NULL, 0, 0, 'asdsa', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'aaaaa', 'asdsa', 'asdas', 'sadsadas', 'adsa', 2, '大学', '阿萨德', 3, 1),
-(5, 2, '11231232131', '11111', '11111111111111111', '11111111132', '11212', '324123123213213111', '1111', '111111', 1490080641, 1490080641, 0, 2, '111111111', '1213-12-31 00:00:00', '0000-00-00 00:00:00', NULL, '123123', '12312', '3213', 'aaaa', 2, 'benle', 'asa', 2, 1),
-(6, 4, '11231232132', '123123123123213', '12312321', '31232131231', '312321', '213123213123123123', '123213', '213213', 1490086464, 1490086464, 0, 1, '12321312312312', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, '123123', '12312', '321312312', '啊啊', 1, '爱上', '啊', 2, 2);
+INSERT INTO `stafftbl` (`id`, `position`, `mobile`, `QQ`, `email`, `emergency_contact_no`, `emergency_contact`, `id_no`, `addr`, `login_pwd`, `gmt_create`, `gmt_modified`, `is_del`, `bank`, `acct_id`, `hiredate`, `expiration`, `medical_examination`, `other`, `photo`, `pic_path`, `name`, `department`, `education`, `native_place`, `state`, `audit`, `login_time`, `login_ip`) VALUES
+(10, 1, '00000000000', '545225214225', 'lp_vitadoce@163.com', '1', '12322222222', '123333322222222222', 'sdfsadasdsadsadasdsadasd', '670b14728ad9902aecba32e22fa4f6bd', NULL, NULL, 0, 1, '12313', '2017-03-15 00:00:00', '2017-03-22 00:00:00', '1', '123', NULL, '1232313', 'vita', 1, '1', '1232131', 1, 0, NULL, NULL),
+(11, NULL, '25125462512', NULL, 'fdsa@fsad.com', NULL, NULL, NULL, NULL, 'c4ca4238a0b923820dcc509a6f75849b', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 0, NULL, NULL),
+(1, NULL, '', NULL, '', NULL, NULL, NULL, NULL, '1', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 0, NULL, NULL),
+(12, NULL, '', NULL, '', NULL, NULL, NULL, NULL, '', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 0, NULL, NULL),
+(13, NULL, '', NULL, '', NULL, NULL, NULL, NULL, '', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 0, NULL, NULL),
+(14, NULL, '11111111111', NULL, '111@dfs.com', NULL, NULL, NULL, NULL, 'c81e728d9d4c2f636f067f89cc14862c', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -706,12 +723,11 @@ INSERT INTO `stafftbl` (`id`, `position`, `mobile`, `QQ`, `email`, `emergency_co
 -- 表的结构 `state_typetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `state_typetbl` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `state_typetbl` (
+  `id` int(11) NOT NULL,
   `state_type` varchar(32) NOT NULL COMMENT '状态',
-  `is_del` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='状态类型表';
+  `is_del` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='状态类型表';
 
 --
 -- 转存表中的数据 `state_typetbl`
@@ -728,16 +744,15 @@ INSERT INTO `state_typetbl` (`id`, `state_type`, `is_del`) VALUES
 -- 表的结构 `storagetbl`
 --
 
-CREATE TABLE IF NOT EXISTS `storagetbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `storagetbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `storage_addr` varchar(255) DEFAULT NULL COMMENT '仓位地址',
   `loading_way` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '仓位装车方式',
   `loading_capacity` int(8) UNSIGNED DEFAULT NULL COMMENT '仓库装车能力',
   `storage_rent` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '仓库租赁方式',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  `publisher` char(11) DEFAULT NULL COMMENT '发布人',
-  PRIMARY KEY (`id`)
+  `publisher` char(11) DEFAULT NULL COMMENT '发布人'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -746,16 +761,15 @@ CREATE TABLE IF NOT EXISTS `storagetbl` (
 -- 表的结构 `storage_demandtbl`
 --
 
-CREATE TABLE IF NOT EXISTS `storage_demandtbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `storage_demandtbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `people_need` char(11) DEFAULT NULL COMMENT '仓位需求人',
   `storage_addr` varchar(255) DEFAULT NULL COMMENT '仓位地址',
   `loading_way` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '仓位装车方式',
   `loading_capacity` int(8) UNSIGNED DEFAULT NULL COMMENT '仓位装车能力',
   `storage_rent` tinyint(4) UNSIGNED DEFAULT NULL COMMENT '仓位租赁方式',
   `gmt_create` int(11) UNSIGNED DEFAULT NULL COMMENT '创建时间',
-  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -764,8 +778,8 @@ CREATE TABLE IF NOT EXISTS `storage_demandtbl` (
 -- 表的结构 `usertbl`
 --
 
-CREATE TABLE IF NOT EXISTS `usertbl` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `usertbl` (
+  `id` int(11) UNSIGNED NOT NULL,
   `user_type` tinyint(3) UNSIGNED DEFAULT '1' COMMENT '用户类型',
   `phone_no` varchar(11) NOT NULL COMMENT '手机号码',
   `login_pwd` char(32) NOT NULL COMMENT '登陆密码',
@@ -774,9 +788,8 @@ CREATE TABLE IF NOT EXISTS `usertbl` (
   `gmt_cerate` int(11) UNSIGNED DEFAULT NULL COMMENT '上传时间',
   `gmt_modified` int(11) UNSIGNED DEFAULT NULL COMMENT '修改时间',
   `del` tinyint(3) UNSIGNED DEFAULT '0' COMMENT '伪删除',
-  `email` varchar(128) NOT NULL COMMENT '邮箱',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+  `email` varchar(128) NOT NULL COMMENT '邮箱'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `usertbl`
@@ -792,7 +805,400 @@ INSERT INTO `usertbl` (`id`, `user_type`, `phone_no`, `login_pwd`, `last_loginip
 (7, 1, '121212', '1213edfdsadas', NULL, NULL, 1489980256, 0, NULL, '123123'),
 (8, 4, '1212312', '3213123', NULL, NULL, 1489980737, 0, NULL, '12321321'),
 (9, 4, '13421312', '124124', NULL, NULL, 1489980786, 0, NULL, '12412312');
-COMMIT;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `adopt_typetbl`
+--
+ALTER TABLE `adopt_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `audit_typetbl`
+--
+ALTER TABLE `audit_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `backgroud`
+--
+ALTER TABLE `backgroud`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `bank_typetbl`
+--
+ALTER TABLE `bank_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `buyer_certificatetbl`
+--
+ALTER TABLE `buyer_certificatetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `certificate_typetbl`
+--
+ALTER TABLE `certificate_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `coal_demandtbl`
+--
+ALTER TABLE `coal_demandtbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `coal_ordertbl`
+--
+ALTER TABLE `coal_ordertbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `coal_products`
+--
+ALTER TABLE `coal_products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `complainttbl`
+--
+ALTER TABLE `complainttbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `complaint_typetbl`
+--
+ALTER TABLE `complaint_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `co_emptbl`
+--
+ALTER TABLE `co_emptbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `co_usertbl`
+--
+ALTER TABLE `co_usertbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `demandtbl`
+--
+ALTER TABLE `demandtbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `department_typetbl`
+--
+ALTER TABLE `department_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `deposittbl`
+--
+ALTER TABLE `deposittbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `deposit_apptbl`
+--
+ALTER TABLE `deposit_apptbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `econtacttbl`
+--
+ALTER TABLE `econtacttbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `education_typetbl`
+--
+ALTER TABLE `education_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fast_reward_apptbl`
+--
+ALTER TABLE `fast_reward_apptbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fin_usertbl`
+--
+ALTER TABLE `fin_usertbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `managertbl`
+--
+ALTER TABLE `managertbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `newstbl`
+--
+ALTER TABLE `newstbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pictbl`
+--
+ALTER TABLE `pictbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `platform_stafftbl`
+--
+ALTER TABLE `platform_stafftbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `position_typetbl`
+--
+ALTER TABLE `position_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `possesiontbl`
+--
+ALTER TABLE `possesiontbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ppt_imgtbl`
+--
+ALTER TABLE `ppt_imgtbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `product_typetbl`
+--
+ALTER TABLE `product_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `seller_certificatetbl`
+--
+ALTER TABLE `seller_certificatetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stafftbl`
+--
+ALTER TABLE `stafftbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `state_typetbl`
+--
+ALTER TABLE `state_typetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `storagetbl`
+--
+ALTER TABLE `storagetbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `storage_demandtbl`
+--
+ALTER TABLE `storage_demandtbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `usertbl`
+--
+ALTER TABLE `usertbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `adopt_typetbl`
+--
+ALTER TABLE `adopt_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- 使用表AUTO_INCREMENT `audit_typetbl`
+--
+ALTER TABLE `audit_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- 使用表AUTO_INCREMENT `backgroud`
+--
+ALTER TABLE `backgroud`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- 使用表AUTO_INCREMENT `bank_typetbl`
+--
+ALTER TABLE `bank_typetbl`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- 使用表AUTO_INCREMENT `buyer_certificatetbl`
+--
+ALTER TABLE `buyer_certificatetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `certificate_typetbl`
+--
+ALTER TABLE `certificate_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `coal_demandtbl`
+--
+ALTER TABLE `coal_demandtbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `coal_ordertbl`
+--
+ALTER TABLE `coal_ordertbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `coal_products`
+--
+ALTER TABLE `coal_products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `complainttbl`
+--
+ALTER TABLE `complainttbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `complaint_typetbl`
+--
+ALTER TABLE `complaint_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `co_emptbl`
+--
+ALTER TABLE `co_emptbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `co_usertbl`
+--
+ALTER TABLE `co_usertbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `demandtbl`
+--
+ALTER TABLE `demandtbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `department_typetbl`
+--
+ALTER TABLE `department_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- 使用表AUTO_INCREMENT `deposittbl`
+--
+ALTER TABLE `deposittbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `deposit_apptbl`
+--
+ALTER TABLE `deposit_apptbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `econtacttbl`
+--
+ALTER TABLE `econtacttbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `education_typetbl`
+--
+ALTER TABLE `education_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- 使用表AUTO_INCREMENT `fast_reward_apptbl`
+--
+ALTER TABLE `fast_reward_apptbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `fin_usertbl`
+--
+ALTER TABLE `fin_usertbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `managertbl`
+--
+ALTER TABLE `managertbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- 使用表AUTO_INCREMENT `newstbl`
+--
+ALTER TABLE `newstbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `pictbl`
+--
+ALTER TABLE `pictbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `platform_stafftbl`
+--
+ALTER TABLE `platform_stafftbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `position_typetbl`
+--
+ALTER TABLE `position_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- 使用表AUTO_INCREMENT `possesiontbl`
+--
+ALTER TABLE `possesiontbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `ppt_imgtbl`
+--
+ALTER TABLE `ppt_imgtbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `product_typetbl`
+--
+ALTER TABLE `product_typetbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `seller_certificatetbl`
+--
+ALTER TABLE `seller_certificatetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `stafftbl`
+--
+ALTER TABLE `stafftbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+--
+-- 使用表AUTO_INCREMENT `state_typetbl`
+--
+ALTER TABLE `state_typetbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- 使用表AUTO_INCREMENT `storagetbl`
+--
+ALTER TABLE `storagetbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `storage_demandtbl`
+--
+ALTER TABLE `storage_demandtbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `usertbl`
+--
+ALTER TABLE `usertbl`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

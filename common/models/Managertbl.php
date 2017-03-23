@@ -165,11 +165,9 @@ class Managertbl extends \yii\db\ActiveRecord {
         return Managertbl::find()->where(['examination' => 1])->count();
     }
 
-    //约束内容，多余的用...显示
-    // public function getBeginning()
-    // {
-    //     $tmpStr = strip_tags($this->id_no);
-    //     $tmpLen = mb_strlen($tmpStr);
-    //     return mb_substr($tmpStr,0,1,'utf-8').(($tmpLen>1)?'...':'');
-    // } 
+    public function approve1() {
+        $this->adopt = 2;
+        return ($this->save() ? true : false);
+    }
+
 }

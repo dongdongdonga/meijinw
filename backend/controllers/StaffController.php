@@ -4,121 +4,66 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Stafftbl;
-use common\models\StafftblSearch;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\data\Pagination;
 
-/**
- * StaffController implements the CRUD actions for Stafftbl model.
- */
-class StaffController extends Controller
-{
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+class StaffController extends Controller {
 
-    /**
-     * Lists all Stafftbl models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new StafftblSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Stafftbl model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Stafftbl model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Stafftbl();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+    public function actionChangepwd() {
+        $this->layout = false;
+//接收到的Token
+        $time = Yii::$app->request->get("timestamp");
+        $mobile = Yii::$app->request->get("mobile");
+        $token = Yii::$app->request->get("token");
+//系统生成的Token
+        $model = new Stafftbl;
+        $mytoken = $model->createToken($mobile, $time);
+        if ($token != $mytoken) {
+            $this->redirect(['staff/login']);
+            Yii::$app->end();
+        }
+//如果当前时间减$time，大于300s，即超过5min连接实效
+        if (time() - $time > 300) {
+            $this->redirect(['staff/login']);
+            Yii::$app->end();
+        }
+        if (Yii::$app->request->isPost) {
+            $post = Yii::$app->request->post();
+            if ($model->changePwd($post)) {
+                Yii::$app->session->setFlash('info', '密码修改成功');
+            }
         }
     }
 
-    /**
-     * Updates an existing Stafftbl model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+//staff列表
+    public function actionIndex() {
+        $this->layout = 'layout1';
+        $model = Stafftbl::find();
+//数据总数
+        $count = $model->count();
+//分页处理,需要在配置文件params中设置params.php
+        $pageSize = Yii::$app->params['pageSize']['staff'];
+        $pager = new Pagination(['totalCount' => $count, 'pageSize' => $pageSize]);
+        $staffs = $model->offset($pager->offset)->limit($pager->limit)->all();
+        return $this->render('index', ['staffs' => $staffs, 'pager' => $pager]);
+    }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+//新建员工
+    public function actionCreate() {
+        $this->layout = 'layout1';
+        $model = new Stafftbl;
+        if (Yii::$app->request->isPost) {
+            $post = Yii::$app->request->post();
+            if ($model->create($post)) {
+                Yii::$app->session->setFlash('info', '添加成功');
+            } else {
+                Yii::$app->session->setFlash('info', '添加失败');
+            }
         }
+//创建完管理员则清空密码行（为了美观）
+        $model->login_pwd = '';
+        $model->repwd = '';
+        return $this->render('create', ['model' => $model]);
     }
 
-    /**
-     * Deletes an existing Stafftbl model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Stafftbl model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Stafftbl the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Stafftbl::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
 }
