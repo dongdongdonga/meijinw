@@ -60,10 +60,59 @@ class StaffController extends Controller {
                 Yii::$app->session->setFlash('info', '添加失败');
             }
         }
+
+
+
+
+
+
+
 //创建完管理员则清空密码行（为了美观）
         $model->login_pwd = '';
         $model->repwd = '';
         return $this->render('create', ['model' => $model]);
     }
 
-}
+
+    public function actionView()
+    {
+        $this->layout = 'layout1';
+        $model = new Stafftbl();
+        $staff = Stafftbl::find()->all();
+        $id = (int) Yii::$app->request->get('id');
+
+
+
+        return $this->render('view', ['staff' => $staff,
+            'model' => $this->redirect($id),]);
+
+
+
+
+    }
+    public function actionTest()
+    {
+        $id = (int) Yii::$app->request->get('id');
+        if (empty($id)) {
+            $this->redirect(['staff/index']);
+        }
+        $model = new Stafftbl();
+        $this->layout = 'layout1';
+
+        $staffs = $model::findOne($id);
+
+        return $this->render('view', ['staffs' => $staffs,
+            ]);
+    }
+
+
+
+    }
+
+
+
+
+
+
+
+
