@@ -1,55 +1,129 @@
 <?php
 
-use yii\bootstrap\ActiveForm;
+//use yii\bootstrap\ActiveForm;
+use yii\widgets\ActiveForm;
+use kartik\datetime\DateTimePicker;
+
 use yii\helpers\Html;
+use common\models\BankTypetbl;
+use common\models\EducationTypetbl;
+use common\models\DepartmentTypetbl;
+use common\models\PositionTypetbl;
+use common\models\StateTypetbl;
+use kartik\date\DatePicker;
+
+
+
 ?>
+
 <!-- main container -->
 <div class="content">
-    <div class="container-fluid">
-        <div id="pad-wrapper" class="new-user">
-            <div class="row-fluid header">
-                <h3>添加新管理员</h3>
-            </div>
 
-            <div class="row-fluid form-wrapper">
-                <!-- left column -->
-                <div class="span9 with-sidebar">
-                    <div class="container">
-                        <?php
-                        if (Yii::$app->session->hasFlash('info')) {
-                            echo Yii::$app->session->getFlash('info');
-                        }
-                        $form = ActiveForm::begin([
-                                    'options' => ['class' => 'new_user_form inline-input'],
-                                    'fieldConfig' => [
-                                        'template' => '<div class=span12 field-box>{label}{input}</div>{error}'
-                                    ],
-                        ]);
-                        ?>
-                        <?php echo $form->field($model, 'mobile')->textInput(['class' => 'span9']); ?>
-                        <?php echo $form->field($model, 'email')->textInput(['class' => 'span9']); ?>
-                        <?php echo $form->field($model, 'login_pwd')->passwordInput(['class' => 'span9']); ?>
-                        <?php echo $form->field($model, 'repwd')->passwordInput(['class' => 'span9']); ?>
-                        <div class="span11 field-box actions">
-                            <div>
-                                <?php echo Html::submitButton('创建', ['class' => "btn-glow primary"]); ?>
-                                <span>或者</span>
-                                <?php echo Html::resetButton('取消', ['class' => "reset"]); ?>
-                            </div>
-                        </div>
-                        <?php ActiveForm::end(); ?>
-                    </div>
-                </div>
-                <!-- side right column -->
-                <div class="span3 form-sidebar pull-right">
-                    <div class="alert alert-info hidden-tablet">
-                        <i class="icon-lightbulb pull-left"></i>请在左侧填写管理员相关信息，包括管理员账号，电子邮箱，以及密码</div>
-                    <h6>重要提示：</h6>
-                    <p>管理员可以管理后台功能模块</p>
-                    <p>请谨慎添加</p>
-                </div>
-            </div>
+    <div class="stafftbl-form">
+
+        <?php $form = ActiveForm::begin(); ?>
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+
+        <?=//填写变为下拉菜单
+        $form->field($model, 'department')->dropDownList(DepartmentTypetbl::find()
+            ->select(['department_type','id'])
+            ->indexBy('id')
+            ->column(),
+            ['prompt'=>'请选择部门']); ?>
+
+
+
+
+        <?= $form->field($model, 'position')->dropDownList(PositionTypetbl::find()
+            ->select(['position_type','id'])
+            ->indexBy('id')
+            ->column(),
+            ['prompt'=>'请选择职位']); ?>
+
+        <?= $form->field($model, 'state')->dropDownList(StateTypetbl::find()
+            ->select(['state_type','id'])
+            ->indexBy('id')
+            ->column(),
+            ['prompt'=>'请选择状态']); ?>
+
+        <?= $form->field($model, 'education')->dropDownList(EducationTypetbl::find()
+            ->select(['education_type','id'])
+            ->indexBy('id')
+            ->column(),
+            ['prompt'=>'请选择学历 ']); ?>
+
+        <?= $form->field($model, 'native_place')->textInput() ?>
+
+
+
+        <?= $form->field($model, 'mobile')->textInput(]) ?>
+
+        <?= $form->field($model, 'QQ')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'emergency_contact')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'emergency_contact_no')->textInput(['maxlength' => true]) ?>
+
+
+
+        <?= $form->field($model, 'id_no')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'addr')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'login_pwd')->textInput(['maxlength' => true]) ?>
+
+
+        <?= $form->field($model, 'bank')->dropDownList(BankTypetbl::find()
+            ->select(['bank_type','id'])
+            ->indexBy('id')
+            ->column(),
+            ['prompt'=>'请选择开户行']); ?>
+
+
+        <?= $form->field($model, 'acct_id')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'hiredate')->widget(DatePicker::classname(), [
+            'options' => ['placeholder' => ''],
+            'pluginOptions' => [
+                'autoclose' => true,
+                'todayHighlight' => true,
+                'format' => 'yyyy-mm-dd',
+            ]
+        ]); ?>
+
+
+
+        <?= $form->field($model, 'expiration')->widget(DatePicker::classname(), [
+            'options' => ['placeholder' => ''],
+            'pluginOptions' => [
+                'autoclose' => true,
+                'todayHighlight' => true,
+                'format' => 'yyyy-mm-dd',
+            ]
+        ]); ?>
+
+
+
+        <?= $form->field($model, 'other')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'cover', [
+            'options'=>['class'=>''],
+            'inputOptions' => ['class' => 'form-control'],
+        ])->fileInput()->label(false); ?>
+
+
+
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? '新增' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
+
+        <?php ActiveForm::end(); ?>
+
     </div>
-</div>
-<!-- end main container -->
+
+
+
+    <!-- end main container -->

@@ -63,9 +63,17 @@
 
                                 <td class="align-right">
                                     <a href="<?php
-                                    echo yii\helpers\Url::to(['staff/delete', 'adminid' => $manager->adminid]);
+                                    echo yii\helpers\Url::to(['staff/test', 'id' => $staff->id]);
+                                    ?>">查看</a>
+
+                                <a href="<?php
+                                    echo yii\helpers\Url::to(['staff/delete', 'id' => $staff->id]);
                                     ?>">删除</a></td>
                             </tr>
+
+
+
+
                         <?php endforeach; ?>
                     </tbody>
                 </table>
